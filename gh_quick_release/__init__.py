@@ -1,5 +1,4 @@
 
-
 import os
 from argparse import ArgumentParser
 import simplejson as json
@@ -7,20 +6,6 @@ import simplejson as json
 from .GitClient import GitClient
 from .GhClient import GhClient
 from .Errors import CliError
-
-# Increments the patch version.
-def increment_version(version):
-    first_dot = version.find('.')
-    major = version[0 : first_dot]
-    second_dot = version.find('.', first_dot + 1)
-    minor = version[first_dot + 1 : second_dot]
-    # If the patch number doesn't exist, default to 1.
-    patch = version[second_dot + 1 : len(version)]
-    if patch == '':
-        return major + '.' + minor + '.' + '1'
-    else:
-        patch_number = int(patch) + 1
-        return major + '.' + minor + '.' + str(patch_number)
 
 # Info needed:
 # - Commit message for the version bump.
@@ -32,7 +17,7 @@ def increment_version(version):
 # - Is it a pre-release?
 # Returns a dict with the information passed by the user along with sensible
 # defaults of applied.
-def get_args(package):
+def get_args():
     parser = ArgumentParser()
     parser.add_argument(
         '--commit-msg',
@@ -102,9 +87,26 @@ def get_args(package):
         help='Tells the utility to redirect the git messages to /dev/null'
     )
 
-    args = parser.parse_args()
-    # Some additional defaults need to be generated from the information
-    # specified by the user.
+    return parser.parse_args()
+
+# Increments the patch version in the case that the version is not specified.
+def increment_version(version):
+    first_dot = version.find('.')
+    major = version[0 : first_dot]
+    second_dot = version.find('.', first_dot + 1)
+    minor = version[first_dot + 1 : second_dot]
+    # If the patch number doesn't exist, default to 1.
+    patch = version[second_dot + 1 : len(version)]
+    if patch == '':
+        return major + '.' + minor + '.' + '1'
+    else:
+        patch_number = int(patch) + 1
+        return major + '.' + minor + '.' + str(patch_number)
+
+# Some additional defaults need to be generated from the information
+# specified by the user, etc.
+def adjust_args(args, package):
+
     if args.version == None:
         args.version = increment_version(package['version'])
 
@@ -113,8 +115,6 @@ def get_args(package):
 
     if args.release_title == None:
         args.release_title = 'Release v' + args.version
-
-    return args
 
 
 package_path = os.getcwd() + '/package.json'
@@ -128,6 +128,7 @@ def write_package_json(package, args):
     with open(package_path, 'w') as file:
         file.write(txt)
 
+# Publish changes to git
 def publish_change(say, git, args):
     git_output = git.check_output('rev-parse', '--abbrev-ref', 'HEAD')
     current_branch = git_output.replace('\n', '')
@@ -189,8 +190,9 @@ def create_release(say, git, args):
     
 def main():
     try:
+        args = get_args()
         package = load_package_json()
-        args = get_args(package)
+        adjust_args(args, package)
         package['version'] = args.version
 
         def say(msg):
