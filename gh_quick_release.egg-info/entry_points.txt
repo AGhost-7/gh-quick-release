@@ -1,3 +1,0 @@
-[console_scripts]
-gh-quick-release = gh_quick_release:main
-
