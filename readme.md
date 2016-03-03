@@ -1,4 +1,5 @@
 # `gh-quick-release`
+This tool updates your package.json file's version number, merges develop into master and pushes the changes, and creates a new release on Github.
 
 ## Installation
 ```bash
