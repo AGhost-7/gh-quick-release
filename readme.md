@@ -58,3 +58,7 @@ Well, mainly just for fun. At the same time, I wanted to just write sync code.
 The problem is that this would've required some extension modules, which
 make it hard to support all nodejs versions. This project is able to support
 nodejs 0.6 to 5! ( ͡° ͜ʖ ͡° )
+
+## TODO
+- pull origin master into local master before pushing.
+- Ignore git hooks.
