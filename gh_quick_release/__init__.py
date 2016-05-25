@@ -128,19 +128,26 @@ def write_package_json(package, args):
     with open(package_path, 'w') as file:
         file.write(txt)
 
+# Verify that the state of the git repo is sane and up to date.
+def check_local_repo(git):
+    status = git.status('--short')
+    if len(status) > 0:
+        raise CliError('There are uncommited changes in branch ' + status)
+    git.checkout(args.from_branch)
+    git.pull(args.remote, args.from_branch)
+    git.checkout(args.into_branch)
+    git.pull(args.remote, args.into_branch)
+
 # Publish changes to git
 def publish_change(say, git, args):
-    git_output = git.check_output('rev-parse', '--abbrev-ref', 'HEAD')
-    current_branch = git_output.replace('\n', '')
-    if current_branch != args.from_branch:
-        msg = """
-        Need to be on the {0} branch. Currently on the {1} branch.
-        """.format(args.from_branch, current_branch)
-        raise CliError(msg)
+    git.checkout(args.from_branch)
     git.add('package.json')
     git.commit('-m', args.commit)
     say('Commited changes')
+    # e.g., push changes to origin develop
+    git.push(args.remote, args.from_branch)
     git.checkout(args.into_branch)
+    # e.g., merge develop into master
     git.merge(args.from_branch, '--no-edit')
     say('Merged into branch ' + args.into_branch)
     git.push(args.remote, args.from_branch)
@@ -198,8 +205,10 @@ def main():
         def say(msg):
             if args.verbose == True:
                 print(msg)
+
         git = GitClient(args.cmd_redirect)
 
+        check_local_repo(git)
         write_package_json(package, args)
         say('Wrote to file package.json version update')
         publish_change(say, git, args)

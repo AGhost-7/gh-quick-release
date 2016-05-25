@@ -61,4 +61,4 @@ nodejs 0.6 to 5! ( ͡° ͜ʖ ͡° )
 
 ## TODO
 - pull origin master into local master before pushing.
-- Ignore git hooks.
+- Rollback or resume (to the point where it failed).
