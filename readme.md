@@ -60,5 +60,4 @@ make it hard to support all nodejs versions. This project is able to support
 nodejs 0.6 to 5! ( ͡° ͜ʖ ͡° )
 
 ## TODO
-- pull origin master into local master before pushing.
 - Rollback or resume (to the point where it failed).
