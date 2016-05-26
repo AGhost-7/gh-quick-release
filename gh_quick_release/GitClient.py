@@ -2,7 +2,7 @@ from subprocess import call, check_output, STDOUT
 from os import devnull
 
 class GitClient:
-    def __init__(self, redirect, no_verify=true):
+    def __init__(self, redirect, no_verify=True):
         self.redirect = redirect
         self.no_verify = no_verify
 
@@ -17,7 +17,8 @@ class GitClient:
         return check_output(args)
 
     def status(self, *params):
-        return self.check_output(('status',) + params)
+        args = self._arr(('git', 'status') + params)
+        return check_output(args)
 
     def call(self, params):
         args = self._arr(('git',) + params)
@@ -36,7 +37,7 @@ class GitClient:
         self.call(('push',) + params)
 
     def pull(self, *params):
-        self.call(('pull') + params)
+        self.call(('pull',) + params)
 
     def commit(self, *params):
         if self.no_verify:
@@ -52,3 +53,6 @@ class GitClient:
 
     def merge(self, *params):
         self.call(('merge',) + params)
+    def current_branch(self):
+        output = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
+        return output.replace('\n', '')

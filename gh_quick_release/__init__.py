@@ -129,19 +129,21 @@ def write_package_json(package, args):
         file.write(txt)
 
 # Verify that the state of the git repo is sane and up to date.
-def check_local_repo(git):
+def check_local_repo(git, args):
     status = git.status('--short')
     if len(status) > 0:
-        raise CliError('There are uncommited changes in branch ' + status)
+        msg = 'There are uncommitted changes in branch ' + git.current_branch()
+        raise CliError(msg)
     git.checkout(args.from_branch)
     git.pull(args.remote, args.from_branch)
     git.checkout(args.into_branch)
     git.pull(args.remote, args.into_branch)
+    git.checkout(args.from_branch)
 
 # Publish changes to git
 def publish_change(say, git, args):
     git.checkout(args.from_branch)
-    git.add('package.json')
+    git.add('-A')
     git.commit('-m', args.commit)
     say('Commited changes')
     # e.g., push changes to origin develop
@@ -170,6 +172,19 @@ def create_release(say, git, args):
     say('Repo is: ' + repo)
 
     # And now I can send my payload :D
+
+    client = GhClient(args.user, args.password)
+
+    payload = {
+        'tag_name': 'v' + args.version,
+        'target_commitish': args.into_branch,
+        'name': args.release_title,
+        'body': args.release_description,
+        'prerelease': args.pre_release
+    }
+    return client.post('repos/' + owner + '/' + repo + '/releases', payload)
+
+def add_env(args):
     user = os.getenv('GH_USER')
     pw = os.getenv('GH_PASSWORD')
     if user == None:
@@ -184,23 +199,16 @@ def create_release(say, git, args):
         GH_PASSWORD
         '''
         raise CliError(msg)
-    client = GhClient(user, pw)
+    args.password = pw
+    args.user = user
 
-    payload = {
-        'tag_name': 'v' + args.version,
-        'target_commitish': args.into_branch,
-        'name': args.release_title,
-        'body': args.release_description,
-        'prerelease': args.pre_release
-    }
-    return client.post('repos/' + owner + '/' + repo + '/releases', payload)
-    
 def main():
     try:
         args = get_args()
         package = load_package_json()
         adjust_args(args, package)
         package['version'] = args.version
+        add_env(args)
 
         def say(msg):
             if args.verbose == True:
@@ -208,7 +216,7 @@ def main():
 
         git = GitClient(args.cmd_redirect)
 
-        check_local_repo(git)
+        check_local_repo(git, args)
         write_package_json(package, args)
         say('Wrote to file package.json version update')
         publish_change(say, git, args)

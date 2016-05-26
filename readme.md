@@ -6,6 +6,13 @@ This tool updates your package.json file's version number, merges develop into m
 pip install --user gh-quick-release
 ```
 
+## Installing from source
+```bash
+git clone https://github.com/AGhost-7/gh-quick-release.git
+cd gh-quick-release
+python setup.py install --user
+```
+
 ## Usage
 Just run the utility from your project directory. It requires you to have
 two environment variables of set; `GH_USER` and `GH_PASSWORD` (used for
@@ -57,7 +64,9 @@ optional arguments:
 Well, mainly just for fun. At the same time, I wanted to just write sync code.
 The problem is that this would've required some extension modules, which
 make it hard to support all nodejs versions. This project is able to support
-nodejs 0.6 to 5! ( ͡° ͜ʖ ͡° )
+nodejs 0.6 to 6!
+( ͡° ͜ʖ ͡° )
+
 
 ## TODO
 - Rollback or resume (to the point where it failed).
