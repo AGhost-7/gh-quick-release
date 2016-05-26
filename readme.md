@@ -69,4 +69,5 @@ nodejs 0.6 to 6!
 
 
 ## TODO
-- Rollback or resume (to the point where it failed).
+- Rollback or resume (to the point where it failed). Tbh this isn't really
+important since it does a lot of sanity checks at the begining.
