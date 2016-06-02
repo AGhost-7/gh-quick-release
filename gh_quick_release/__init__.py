@@ -196,7 +196,7 @@ def create_release(say, git, args):
 def add_env(args):
     user = os.getenv('GH_USER')
     pw = os.getenv('GH_PASSWORD')
-    if user == None or len(user):
+    if user == None or len(user) == 0:
         msg = '''
         Github username must be specified through the environment variable
         GH_USER
