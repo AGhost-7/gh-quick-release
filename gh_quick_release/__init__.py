@@ -86,6 +86,15 @@ def get_args():
         default=True,
         help='Tells the utility to redirect the git messages to /dev/null'
     )
+    parser.add_argument(
+        '--print-version',
+        default=False,
+        action='store_true',
+        dest='print_version',
+        help='This causes the utility to only print out the next release ' +
+        'version based on the parameters of supplied then exit.'
+    )
+
 
     return parser.parse_args()
 
@@ -208,6 +217,12 @@ def main():
         package = load_package_json()
         adjust_args(args, package)
         package['version'] = args.version
+
+        if args.print_version:
+            print(args.version)
+            return
+
+        return
         add_env(args)
 
         def say(msg):
