@@ -60,6 +60,13 @@ optional arguments:
                         /dev/null
 ```
 
+## Removing the TLS Certificate Warning
+Just certifi, a package which update's the Python certificates automatically.
+
+```
+pip install --user certifi
+```
+
 ## Why is this a Python project?
 Well, mainly just for fun. At the same time, I wanted to just write sync code.
 The problem is that this would've required some extension modules, which
