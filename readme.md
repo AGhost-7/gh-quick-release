@@ -78,3 +78,8 @@ nodejs 0.6 to 6!
 ## TODO
 - Rollback or resume (to the point where it failed). Tbh this isn't really
 important since it does a lot of sanity checks at the begining.
+- Add customizable release body:
+	- Template for the body.
+	- Commit logs are generated and accessible through the template variables.
+	- Should be able to modify the commit log output through the `--format='%s'`
+	of git.
