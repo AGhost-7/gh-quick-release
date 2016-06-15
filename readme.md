@@ -83,3 +83,7 @@ important since it does a lot of sanity checks at the begining.
 	- Commit logs are generated and accessible through the template variables.
 	- Should be able to modify the commit log output through the `--format='%s'`
 	of git.
+- Check if branches exist and create if not. Esp the master branch. Devel is
+usually there.
+- Better error logging...
+- Always --no-verify
