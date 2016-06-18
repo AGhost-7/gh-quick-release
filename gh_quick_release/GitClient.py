@@ -55,6 +55,9 @@ class GitClient:
     def merge(self, *params):
         self.call(('merge',) + params)
 
+    def fetch(self, *params):
+        self.call(('fetch',) + params)
+
     def current_branch(self):
         output = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
         return output.replace('\n', '')
