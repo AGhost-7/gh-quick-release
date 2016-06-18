@@ -1,6 +1,7 @@
 from subprocess import call, check_output, STDOUT
 from os import devnull
 
+
 class GitClient:
     def __init__(self, redirect, no_verify=True):
         self.redirect = redirect
@@ -53,6 +54,7 @@ class GitClient:
 
     def merge(self, *params):
         self.call(('merge',) + params)
+
     def current_branch(self):
         output = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
         return output.replace('\n', '')

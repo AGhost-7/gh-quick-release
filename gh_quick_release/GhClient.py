@@ -2,6 +2,7 @@ import requests
 import simplejson as json
 from .Errors import CliError
 
+
 class GhClient:
     _gh_url = 'https://api.github.com/'
 
