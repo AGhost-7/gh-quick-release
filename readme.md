@@ -86,4 +86,3 @@ important since it does a lot of sanity checks at the begining.
 - Check if branches exist and create if not. Esp the master branch. Devel is
 usually there.
 - Better error logging...
-- Always --no-verify
