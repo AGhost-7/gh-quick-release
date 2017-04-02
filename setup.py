@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name = 'gh-quick-release',
     packages = find_packages(),
-    version = '0.8',
+    version = '0.9',
     description = 'Create a new release quickly',
     author = 'Jonathan Boudreau',
     author_email = 'jonathan.boudreau.92@gmail.com',
