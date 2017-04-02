@@ -13,6 +13,13 @@ cd gh-quick-release
 python setup.py install --user
 ```
 
+For development, use the following to install from source:
+```
+git clone https://github.com/AGhost-7/gh-quick-release.git
+cd gh-quick-release
+sudo pip install --editable .
+```
+
 ## Usage
 Just run the utility from your project directory. It requires you to have
 two environment variables of set; `GH_USER` and `GH_PASSWORD` (used for

@@ -175,16 +175,22 @@ def publish_change(say, git, args):
     git.checkout(args.from_branch)
 
 
+def parse_remote(remote_conf):
+    remote_url = remote_conf.split('\n')[2]
+    if remote_url.find('https://') > -1:
+        return (remote_url.split('/')[3], remote_url.split('/')[4])
+    else:
+        remote_end = remote_url[remote_url.rfind(':') + 1: len(remote_url)]
+        remote_parts = remote_end.split('/')
+        return (remote_parts[0], remote_parts[1])
+
+
 def create_release(say, git, args):
     # First start by extracting the owner and repo from the remote
     remote_conf = git.check_output('remote', 'show', args.remote)
-    remote_url = remote_conf.split('\n')[2]
-    remote_end = remote_url[remote_url.rfind(':') + 1: len(remote_url)]
-    remote_parts = remote_end.split('/')
 
-    owner = remote_parts[0]
-    repo_part = remote_parts[1]
-    repo = repo_part[0: len(repo_part) - 4]
+    (owner, repo) = parse_remote(remote_conf)
+
     say('Owner is: ' + owner)
     say('Repo is: ' + repo)
 
